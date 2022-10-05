@@ -52,4 +52,9 @@ class MLP_4layers(nn.Module):
     def forward(self, x):
         x = self.flatten(x)
         out = self.linear_relu_stack(x)
-        return out 
+        return out
+
+
+
+def number_of_parameters(model):
+    return sum(torch.numel(p) for p in model.parameters())
