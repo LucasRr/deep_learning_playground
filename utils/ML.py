@@ -2,7 +2,7 @@ import torch
 import time
 
 
-def train_model(model, train_dataloader, val_dataloader, optimizer, loss_fn, num_epochs, device="cpu", verbose=True):
+def train_model(model, train_dataloader, val_dataloader, optimizer, loss_fn, num_epochs, device, verbose=True):
     '''
         Train a model, given an optimizer and a number of epochs.
         Computes validation loss and accuracy after each epoch, and prints train/validation metrics.
@@ -61,7 +61,7 @@ def train_model(model, train_dataloader, val_dataloader, optimizer, loss_fn, num
 
 
 
-def evaluate_model(model, dataloader, loss_fn, device="cpu"):
+def evaluate_model(model, dataloader, loss_fn, device):
     ''' Calculates average loss and accuracy over a dataset'''
     model.eval()
     
@@ -93,7 +93,7 @@ def evaluate_model(model, dataloader, loss_fn, device="cpu"):
 
 
 
-def print_overall_metrics(model, dataloaders, loss_fn, device="cpu"):
+def print_overall_metrics(model, dataloaders, loss_fn, device):
     ''' Prints loss and accuracy for train, validation and test sets'''
     average_loss, accuracy = evaluate_model(model, dataloaders[0], loss_fn, device=device)
     print(f"train loss:      {average_loss:.5f}, accuracy: {accuracy:.5f}")
