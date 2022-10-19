@@ -7,3 +7,4 @@ Example projects:
 - robust_classification: test robustness or various models to translation or noise  
 - Network visualization: visualize networks, using for example activation maximization  
 - Autoencoders: autoencoder architectures, image compression or denoising  
+- transfer learning
