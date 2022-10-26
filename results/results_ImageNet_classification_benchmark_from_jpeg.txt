@@ -1,0 +1,22 @@
+Load ImageNet data from jpegs
+batch_size: 32, num_workers: 4
+
+=== AlexNet: ===
+Loss: 1.910, accuracy: 0.565, top-5 accuracy: 0.791
+Inference time: 1.59 min
+
+=== VGG16: ===
+Loss: 1.145, accuracy: 0.716, top-5 accuracy: 0.904
+Inference time: 7.82 min
+
+=== Inception: ===
+Loss: 0.973, accuracy: 0.775, top-5 accuracy: 0.936
+Inference time: 6.41 min
+
+=== ResNet18: ===
+Loss: 1.247, accuracy: 0.698, top-5 accuracy: 0.891
+Inference time: 1.90 min
+
+=== ResNet101: ===
+Loss: 0.912, accuracy: 0.774, top-5 accuracy: 0.935
+Inference time: 7.47 min

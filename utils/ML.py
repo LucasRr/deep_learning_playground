@@ -91,6 +91,49 @@ def evaluate_model(model, dataloader, loss_fn, device):
         
     return average_loss, accuracy
 
+def evaluate_ImageNet(model, dataloader, loss_fn, device):
+    ''' Calculates average loss and accuracy and top-5 accuracy'''
+    model.eval()
+    
+    num_correct = 0
+    num_top5_correct = 0
+    total_loss = 0
+    num_samples = 0
+
+    for i_batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device), y.to(device)
+
+        # Prediction on batch X:
+        with torch.no_grad():
+            pred = model(X)
+
+        # Batch loss:
+        batch_loss = loss_fn(pred, y).item()
+            
+        # top-5 predicted indexes:
+        try:
+            top5_pred_idx = torch.argsort(pred, descending=True)[:,:5]
+        except:
+            # if cannot be computed on mps
+            pred = pred.to("cpu")
+            y = y.to("cpu")
+            top5_pred_idx = torch.argsort(pred, descending=True)[:,:5]
+
+        # Predicted class indexes:
+        pred_idx = top5_pred_idx[:, 0]
+        # same as torch.argmax(pred, dim=1)
+
+        total_loss += batch_loss * len(y)
+        num_correct += torch.sum(pred_idx == y).item()
+        num_top5_correct += torch.sum(top5_pred_idx == y[:, None])
+
+        num_samples += len(y)
+
+    average_loss = total_loss/num_samples
+    accuracy = num_correct/num_samples
+    top5_accuracy = num_top5_correct/num_samples
+        
+    return average_loss, accuracy, top5_accuracy
 
 
 def print_overall_metrics(model, dataloaders, loss_fn, device):
