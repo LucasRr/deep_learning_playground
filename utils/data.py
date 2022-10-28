@@ -13,7 +13,6 @@ IMAGENET_LABELS = "/Users/lucas/Documents/data/ImageNet/imagenet_labels.txt"
 
 def get_MNIST_data_loaders(batch_size=64, path=DATA_ROOT):
 
-
     # Download train and test data:
 
     training_data_ = datasets.MNIST(
@@ -39,6 +38,23 @@ def get_MNIST_data_loaders(batch_size=64, path=DATA_ROOT):
     train_dataloader = DataLoader(train_split, batch_size=batch_size, shuffle=True)
     val_dataloader = DataLoader(val_split, batch_size=batch_size)
     test_dataloader = DataLoader(test_data, batch_size=batch_size)
+
+    return train_dataloader, val_dataloader, test_dataloader
+
+
+
+def get_CIFAR_data_loaders(batch_size, transform, num_workers=0, path=DATA_ROOT, download=False):
+
+    trainset = datasets.CIFAR10(root=path, train=True, download=download, transform=transform)
+    testset = datasets.CIFAR10(root=path, train=False, download=download, transform=transform)
+
+    # split training data into train and validation sets:
+    train_split, val_split = torch.utils.data.random_split(trainset, [40000, 10000], generator=torch.Generator().manual_seed(42))
+
+    # Create data loaders.
+    train_dataloader = torch.utils.data.DataLoader(train_split, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    val_dataloader = torch.utils.data.DataLoader(val_split, batch_size=batch_size, num_workers=num_workers)
+    test_dataloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, num_workers=num_workers)
 
     return train_dataloader, val_dataloader, test_dataloader
 
@@ -147,5 +163,9 @@ def get_ImageNet_classes(path_to_txt=IMAGENET_LABELS):
         txt = f.read()
         classes = txt.splitlines()
     return classes
+
+def get_CIFAR_classes():
+    return ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
 
 

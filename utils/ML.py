@@ -136,6 +136,102 @@ def evaluate_ImageNet(model, dataloader, loss_fn, device):
     return average_loss, accuracy, top5_accuracy
 
 
+def train_inception(model, train_dataloader, val_dataloader, optimizer, loss_fn, num_epochs, device, verbose=True):
+    '''
+        Same as train_model() but adapted to Inception
+        which returns 2 outputs (logits and auxilliary logits).
+        Here we ignore auxilliary logits.
+    '''
+    
+    model.train()
+
+    train_loss_log = []
+    val_loss_log = []
+
+    t = time.time()
+
+    for i_epoch in range(num_epochs):
+
+        epoch_loss = 0
+        num_samples = 0
+
+        for i_batch, (X, y) in enumerate(train_dataloader):
+            X, y = X.to(device), y.to(device)
+
+            # Compute prediction error
+            pred, _ = model(X)  # ignore auxiliary logits
+            loss = loss_fn(pred, y)
+
+            # Backpropagation
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            batch_loss = loss.item()
+            epoch_loss += batch_loss * len(y)
+            num_samples += len(y)
+
+        # calculate average loss of this epoch:
+        mean_epoch_loss = epoch_loss/num_samples
+
+        # calculate validation loss and accuracy:
+        val_loss, val_acc = evaluate_inception(model, val_dataloader, loss_fn, device=device)
+        model.train()
+        
+        # print and save metrics:
+        if verbose:
+            print(f" epoch: {i_epoch+1:>2}, training loss: {mean_epoch_loss:.3f}, validation loss {val_loss:.3f}, validation accuracy {val_acc:.3f}")
+
+        train_loss_log.append(mean_epoch_loss)
+        val_loss_log.append(val_loss)
+
+    # Calculate average time per epoch:
+    time_per_epoch = (time.time()-t)/num_epochs
+    
+    if verbose:
+        print(f'\nAverage time per epoch: {time_per_epoch:.3f}s')
+    
+    return train_loss_log, val_loss_log
+
+
+
+def evaluate_inception(model, dataloader, loss_fn, device):
+    '''
+        Same as evaluate_model() but adapted to Inception
+        which returns 2 outputs (logits and auxilliary logits).
+        Here we ignore auxilliary logits.
+    '''
+    model.eval()
+    
+    num_correct = 0
+    total_loss = 0
+    num_samples = 0
+
+    for i_batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device), y.to(device)
+
+        # Prediction on batch X:
+        with torch.no_grad():
+            pred = model(X)
+            
+        # Predicted class indexes:
+        pred_idx = torch.argmax(pred, dim=1)
+        
+        # Batch loss:
+        batch_loss = loss_fn(pred, y).item()
+
+        total_loss += batch_loss * len(y)
+        num_correct += torch.sum(pred_idx == y).item()
+        num_samples += len(y)
+
+    average_loss = total_loss/num_samples
+    accuracy = num_correct/num_samples
+        
+    return average_loss, accuracy
+
+
+
+
 def print_overall_metrics(model, dataloaders, loss_fn, device):
     ''' Prints loss and accuracy for train, validation and test sets'''
     average_loss, accuracy = evaluate_model(model, dataloaders[0], loss_fn, device=device)
