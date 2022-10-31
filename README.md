@@ -19,7 +19,7 @@ Below are some benchmark results:
 
 The networks below were adapted from popular image classifiers which achieved high performance on ImageNet, and trained from scratch. In particular the networks were adapted to take 32x32 images as input, with a relatively low number of layers (compared to the original implementations) in order to avoid overfitting and keep training time reasonable. For these reasons the networks are simplified version of the original proposed networks and the results might not reflect results demonstrated on ImageNet.
 
-|     | Test accuracy (%) | Training time (per epoch)|
+| Model | Test accuracy (%) | Training time (per epoch)|
 | --- | --- | --- |
 | Fully-connected | 0.50 | 5.3s|
 | LeNet/AlexNet-style network | 0.66 | 5.9s |
@@ -31,4 +31,12 @@ The networks below were adapted from popular image classifiers which achieved hi
 
 ##### ImageNet classification:
 
-Below we just evaluate popular CNN architectures that are available (with their trained weights) in `torchvision.models`. Evaluation is done on ImageNet's evaluation set which consists of 50000 images. In particular we look at accuracy and top-5 accuracy vs. inference time.
+Below we just evaluate popular CNN architectures that are available (with their trained weights) in `torchvision.models`. Evaluation is done on ImageNet's validation set which consists of 50000 images. In particular we look at accuracy and top-5 accuracy vs. inference time. 
+
+| Model | Accuracy (%) | Top-5 accuracy (%)| Inference time (total) |
+| --- | --- | --- | --- |
+| AlexNet | 0.57 | 0.79 | 1.6 min |
+| VGG16 | 0.72 | 0.90 | 7.8 min |
+| Inception v3| 0.78 | 0.94 | 6.4 min |
+| ResNet18 | 0.70 | 0.89 | 1.9 min |
+| ResNet1012 | 0.77 | 0.94 | 7.5 min |
