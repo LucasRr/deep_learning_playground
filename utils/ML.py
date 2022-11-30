@@ -231,6 +231,110 @@ def evaluate_inception(model, dataloader, loss_fn, device):
 
 
 
+def train_autoencoder(model, train_dataloader, val_dataloader, optimizer, loss_fn, num_epochs, denormalize_func=None, device="cpu", verbose=True):
+    '''
+        Train an autoencoder, given an optimizer and a number of epochs.
+        Computes validation loss and SNR after each epoch, and prints train/validation metrics.
+        Returns per-iteration train and validation losses, for plotting.
+        If denormalize_func is provided, the validation SNR will be 
+        computed in the original space instead of the normalized space 
+        (the validation loss is always computed on the normalized space for simplicity).
+    '''
+    
+    model.train()
+
+    train_loss_log = []
+    val_loss_log = []
+
+    t = time.time()
+
+    for i_epoch in range(num_epochs):
+
+        epoch_loss = 0
+        num_samples = 0
+
+        for i_batch, (X, _) in enumerate(train_dataloader):
+            X = X.to(device)
+
+            # Compute loss
+            Y = model(X)
+            loss = loss_fn(Y, X)
+
+            # Backpropagation
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            batch_loss = loss.item()
+            epoch_loss += batch_loss * len(X)
+            num_samples += len(X)
+
+        # calculate average loss of this epoch:
+        mean_epoch_loss = epoch_loss/num_samples
+
+        # calculate validation loss and accuracy:
+        val_loss, val_SNR = evaluate_autoencoder(model, val_dataloader, loss_fn, denormalize_func, device)
+        model.train()
+        
+        # print and save metrics:
+        if verbose:
+            print(f" epoch: {i_epoch+1:>2}, training loss: {mean_epoch_loss:.3f}, validation loss: {val_loss:.3f}, validation SNR: {val_SNR:.3f}")
+
+        train_loss_log.append(mean_epoch_loss)
+        val_loss_log.append(val_loss)
+
+    # Calculate average time per epoch:
+    time_per_epoch = (time.time()-t)/num_epochs
+    
+    if verbose:
+        print(f'\nAverage time per epoch: {time_per_epoch:.3f}s')
+    
+    return train_loss_log, val_loss_log
+
+
+
+def evaluate_autoencoder(model, dataloader, loss_fn, denormalize_func=None, device="cpu"):
+    ''' 
+        Calculates average loss and SNR over a dataset.
+        losses are averaged over samples, whereas SNR 
+        are averaged over batches
+        If denormalize_func is provided the SNR will be 
+        computed in the original space instead of the
+        normalized space (the loss is always computed on the
+        normalized space for simplicity).
+    '''
+    model.eval()
+    
+    total_SNR, total_loss = 0, 0
+    num_samples, num_batches = 0, 0
+
+    for i_batch, (X, _) in enumerate(dataloader):
+        X = X.to(device)
+
+        # Prediction on batch X:
+        with torch.no_grad():
+            Y = model(X)
+        
+        # Batch loss:
+        batch_loss = loss_fn(Y, X).item()
+
+        if denormalize_func:
+            # compute SNR in original space
+            X = denormalize_func(X)
+            Y = denormalize_func(Y)
+
+        batch_SNR = 10 * torch.log10(torch.sum(X**2)/torch.sum((Y-X)**2))
+
+        total_loss += batch_loss * len(X)
+        total_SNR += batch_SNR
+        num_samples += len(X)
+        num_batches += 1
+
+    average_loss = total_loss/num_samples
+    average_SNR = total_SNR/num_batches
+        
+    return average_loss, average_SNR
+
 
 def print_overall_metrics(model, dataloaders, loss_fn, device):
     ''' Prints loss and accuracy for train, validation and test sets'''
