@@ -6,7 +6,7 @@ Most experiments can be found as a collection of notebooks.
 
 - `MNIST_classification_MLP.ipynb`: multi-layer perceptron architectures for MNIST classification
 - `MNIST_classification_CNN.ipynb`: CNN architectures for MNIST classification
-- `CIFAR10_classification.ipynb`: popular CNN-based architectures (LeNet5, AlexNet, VGG, Inception, ResNet) for CIFAR10 classification (trained from scratch)
+- `CIFAR10_classification.ipynb`: popular CNN-based architectures (LeNet5, AlexNet, VGG, Inception, ResNet) for CIFAR10 classification (implemented and trained from scratch)
 - `CNN_for_image_denoising.ipynb`: compare filtering with various fixed or learned convolution kernels, and simple mutlilayer CNNs for image denoising. Evaluated on MNIST
 - `ImageNet_classification_pretrained.ipynb`: benchmark various pretrained models (available from Pytorch's `torchvision`) for ImageNet classification, in terms of accuracy vs. inference speed.
 - `transfer_learning.ipynb`: transfer learning to classify CIFAR10 images using models pre-trained on ImageNet
