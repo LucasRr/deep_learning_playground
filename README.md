@@ -2,19 +2,21 @@ This repo is a playground to experiment with various deep learning models, on a 
 
 Most experiments can be found as a collection of notebooks (see the list below).
 
-This repo is work in progress and more notebooks will be added in the future. 
+This repo is work in progress and more notebooks/experiments will be added in the future. 
 
-Note: Most models have been trained (when possible) on Apple M1 GPU, which is currently possible using pytorch-nightly, which can be installed with:
+#### Requirements
+
+Most models have been trained (when possible) on Apple M1 GPU, which is currently possible using pytorch-nightly, which can be installed with:
 
 ```
 conda install pytorch torchvision torchaudio -c pytorch-nightly
 ```
 
-Change `device = "mps"` to `device = "cpu"` or `device = "cuda"` in the code to train/evaluate on CPU or cuda GPU instead. 
+Change `device = "mps"` to `device = "cpu"` or `"cuda"` in the code to train/evaluate on CPU or cuda GPU instead. 
 
 See `requirements.txt` for more details on the environment. 
 
-##### List of notebooks:
+#### List of notebooks:
 
 - `MNIST_classification_MLP.ipynb`: multi-layer perceptron architectures for MNIST classification
 - `MNIST_classification_CNN.ipynb`: CNN architectures for MNIST classification
@@ -32,7 +34,7 @@ See `requirements.txt` for more details on the environment.
 
 Below are some benchmark results:
 
-##### CIFAR-10 classification:
+#### CIFAR-10 classification:
 
 A comparison of popular architectures on the CIFAR-10 dataset. Note that those are my own implementations, which have been adapted (and simplified) to take 32x32 images as input, and trained from scratch. The results might thus not be optimal and might not reflect the results demonstrated on ImageNet.
 
@@ -46,7 +48,7 @@ A comparison of popular architectures on the CIFAR-10 dataset. Note that those a
 | Transfer learning (ImageNet-AlexNet features) | 0.83 | 92.5s |
 | Transfer learning (ImageNet-ResNet18 features) | 0.78 | 139.8s |
 
-##### ImageNet classification:
+#### ImageNet classification:
 
 Below we benchmark popular (pre-trained) CNN architectures that are available (with their trained weights) in `torchvision.models` or timm. Evaluation is done on ImageNet's validation set which consists of 50000 images. In particular we look at accuracy and top-5 accuracy vs. inference time. 
 
