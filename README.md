@@ -1,6 +1,18 @@
 This repo is a playground to experiment with various deep learning models, on a variety of tasks, such as image classification, image denoising, dimensionality reduction, transfer learning etc. All models are implemented in Pytorch. 
 
-Most experiments can be found as a collection of notebooks.
+Most experiments can be found as a collection of notebooks (see the list below).
+
+This repo is work in progress and more notebooks will be added in the future. 
+
+Note: Most models have been trained (when possible) on Apple M1 GPU, which is currently possible using pytorch-nightly, which can be installed with:
+
+```
+conda install pytorch torchvision torchaudio -c pytorch-nightly
+```
+
+Change `device = "mps"` to `device = "cpu"` or `device = "cuda"` in the code to train/evaluate on CPU or cuda GPU instead. 
+
+See `requirements.txt` for more details on the environment. 
 
 ##### List of notebooks:
 
@@ -22,7 +34,7 @@ Below are some benchmark results:
 
 ##### CIFAR-10 classification:
 
-A comparison of popular architectures on the CIFAR-10 dataset. Note that those are my own implementations, which have been adapted (and simplified) to take 32x32 images as input, and trained from scratch. The results might thus not be optimal and reflect the results demonstrated on ImageNet.
+A comparison of popular architectures on the CIFAR-10 dataset. Note that those are my own implementations, which have been adapted (and simplified) to take 32x32 images as input, and trained from scratch. The results might thus not be optimal and might not reflect the results demonstrated on ImageNet.
 
 | Model | Test accuracy (%) | Training time (per epoch)|
 | --- | --- | --- |
