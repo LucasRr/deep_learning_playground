@@ -36,7 +36,7 @@ A comparison of popular architectures on the CIFAR-10 dataset. Note that those a
 
 ##### ImageNet classification:
 
-Below we just evaluate popular CNN architectures that are available (with their trained weights) in `torchvision.models`. Evaluation is done on ImageNet's validation set which consists of 50000 images. In particular we look at accuracy and top-5 accuracy vs. inference time. 
+Below we benchmark popular (pre-trained) CNN architectures that are available (with their trained weights) in `torchvision.models` or timm. Evaluation is done on ImageNet's validation set which consists of 50000 images. In particular we look at accuracy and top-5 accuracy vs. inference time. 
 
 | Model | Accuracy (%) | Top-5 accuracy (%)| Inference time (total) |
 | --- | --- | --- | --- |
@@ -45,3 +45,4 @@ Below we just evaluate popular CNN architectures that are available (with their 
 | Inception v3| 0.78 | 0.94 | 6.4 min |
 | ResNet18 | 0.70 | 0.89 | 1.9 min |
 | ResNet101 | 0.77 | 0.94 | 7.5 min |
+| EfficientNet_b2 | 0.78 | 0.94 | 7.4 min |
